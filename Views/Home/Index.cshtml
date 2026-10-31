@@ -1,0 +1,174 @@
+﻿@model IEnumerable<WebsiteApp.Models.RoomType>
+
+@{
+    ViewData["Title"] = "Website App";
+
+    string checkIn = ViewBag.CheckIn ?? "";
+    string checkOut = ViewBag.CheckOut ?? "";
+    int guests = ViewBag.Guests ?? 2;
+}
+
+<div class="container mt-4">
+
+    <!-- Welcome Section -->
+    <div class="text-center mb-5">
+        <h1 class="display-4 fw-bold">
+            Welcome to Website App
+        </h1>
+
+        <p class="lead">
+            Find your perfect stay with comfort and luxury.
+        </p>
+    </div>
+
+    <!-- Search Form -->
+    <div class="card shadow p-4 mb-5">
+
+        <h3 class="mb-3">Search Your Room</h3>
+
+        <form asp-controller="Home"
+              asp-action="Index"
+              method="get">
+
+            <div class="row">
+
+                <div class="col-md-3 mb-3">
+                    <label>Check-In Date</label>
+                    <input type="date"
+                           name="checkIn"
+                           value="@checkIn"
+                           min="@DateTime.Today.ToString("yyyy-MM-dd")"
+                           class="form-control"
+                           required />
+                </div>
+
+                <div class="col-md-3 mb-3">
+                    <label>Check-Out Date</label>
+                    <input type="date"
+                           name="checkOut"
+                           value="@checkOut"
+                           min="@DateTime.Today.AddDays(1).ToString("yyyy-MM-dd")"
+                           class="form-control"
+                           required />
+                </div>
+
+                <div class="col-md-3 mb-3">
+                    <label>Number of Guests</label>
+
+                    <select name="guests" class="form-control">
+                        @for (int i = 1; i <= 5; i++)
+                        {
+                            if (guests == i)
+                            {
+                                <option value="@i" selected>
+                                    @i Guest(s)
+                                </option>
+                            }
+                            else
+                            {
+                                <option value="@i">
+                                    @i Guest(s)
+                                </option>
+                            }
+                        }
+                    </select>
+                </div>
+
+                <div class="col-md-3 mb-3 d-flex align-items-end">
+                    <button type="submit"
+                            class="btn btn-primary w-100">
+                        Search Rooms
+                    </button>
+                </div>
+
+            </div>
+        </form>
+    </div>
+
+    <!-- Room Categories -->
+    <h2 class="text-center mb-4">
+        Our Room Categories
+    </h2>
+
+    <div class="row">
+
+        @if (Model != null && Model.Any())
+        {
+            @foreach (var room in Model)
+            {
+                string category =
+                    room.CategoryName?.ToLower() ?? "";
+
+                string imageName =
+                    category.Contains("deluxe") ? "deluxe.jpg" :
+                    category.Contains("suite") ? "suite.jpg" :
+                    category.Contains("luxury") ? "luxury.jpg" :
+                    "standard.jpg";
+
+                <div class="col-md-6 col-lg-3 mb-4">
+
+                    <div class="card shadow h-100">
+
+                        <!-- Room Image -->
+                        <img src="@Url.Content("~/images/" + imageName)"
+                             alt="@room.CategoryName"
+                             class="card-img-top"
+                             style="height:220px; object-fit:cover;" />
+
+                        <div class="card-body">
+
+                            <h4 class="card-title">
+                                @room.CategoryName
+                            </h4>
+
+                            <p class="card-text">
+                                @room.Description
+                            </p>
+
+                            <p>
+                                <strong>Maximum Guests:</strong>
+                                @room.MaxCapacity
+                            </p>
+
+                            <p>
+                                <strong>Weekday Price:</strong>
+                                ₹@room.WeekdayPrice.ToString("N2")
+                            </p>
+
+                            <p>
+                                <strong>Weekend Price:</strong>
+                                ₹@room.WeekendPrice.ToString("N2")
+                            </p>
+
+                            <!-- Book Now Button -->
+                            <a asp-controller="Booking"
+                               asp-action="Create"
+                               asp-route-roomTypeId="@room.RoomTypeId"
+                               asp-route-checkIn="@checkIn"
+                               asp-route-checkOut="@checkOut"
+                               asp-route-guests="@guests"
+                               class="btn btn-success w-100">
+
+                                Book Now
+
+                            </a>
+
+                        </div>
+                    </div>
+
+                </div>
+            }
+        }
+        else
+        {
+            <div class="col-12">
+                <div class="alert alert-info text-center">
+                    No room categories are available
+                    for the selected guest count.
+                </div>
+            </div>
+        }
+
+    </div>
+
+</div>

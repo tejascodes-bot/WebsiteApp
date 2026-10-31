@@ -1,0 +1,117 @@
+﻿@model IEnumerable<WebsiteApp.Models.Booking>
+
+@{
+    ViewData["Title"] = "Booking Management";
+}
+
+<div class="container mt-4">
+
+    <h2>Booking Management</h2>
+    <hr />
+
+    <!-- Search Booking -->
+    <h4>Search Booking</h4>
+
+    <form asp-controller="Staff"
+          asp-action="Index"
+          method="get">
+
+        <div class="row mb-4">
+
+            <div class="col-md-6">
+                <input type="text"
+                       name="confirmationNumber"
+                       value="@ViewBag.SearchTerm"
+                       class="form-control"
+                       placeholder="Enter Confirmation Number" />
+            </div>
+
+            <div class="col-md-2">
+                <button type="submit"
+                        class="btn btn-primary">
+                    Search
+                </button>
+            </div>
+
+            <div class="col-md-2">
+                <a asp-controller="Staff"
+                   asp-action="Index"
+                   class="btn btn-secondary">
+                    View All
+                </a>
+            </div>
+
+        </div>
+    </form>
+
+    <!-- Booking List -->
+    <h4>All Bookings</h4>
+
+    @if (Model != null && Model.Any())
+    {
+        <div class="table-responsive">
+
+            <table class="table table-bordered table-striped">
+
+                <thead class="table-dark">
+                    <tr>
+                        <th>Confirmation No.</th>
+                        <th>Guest Name</th>
+                        <th>Email</th>
+                        <th>Phone</th>
+                        <th>Room Category</th>
+                        <th>Room Number</th>
+                        <th>Check In</th>
+                        <th>Check Out</th>
+                        <th>Total Price</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    @foreach (var booking in Model)
+                    {
+                        <tr>
+                            <td>@booking.ConfirmationId</td>
+
+                            <td>@booking.Guest?.FullName</td>
+
+                            <td>@booking.Guest?.Email</td>
+
+                            <td>@booking.Guest?.Phone</td>
+
+                            <td>@booking.RoomType?.CategoryName</td>
+
+                            <td>
+                                @(booking.Room?.RoomNumber ?? "Not Assigned")
+                            </td>
+
+                            <td>
+                                @booking.CheckInDate.ToString("dd-MM-yyyy")
+                            </td>
+
+                            <td>
+                                @booking.CheckOutDate.ToString("dd-MM-yyyy")
+                            </td>
+
+                            <td>
+                                ₹@booking.TotalPrice.ToString("N2")
+                            </td>
+
+                            <td>@booking.Status</td>
+                        </tr>
+                    }
+                </tbody>
+
+            </table>
+
+        </div>
+    }
+    else
+    {
+        <div class="alert alert-warning">
+            No bookings found.
+        </div>
+    }
+
+</div>

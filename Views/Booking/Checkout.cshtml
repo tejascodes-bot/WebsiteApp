@@ -1,0 +1,142 @@
+﻿@model WebsiteApp.Models.BookingCheckoutViewModel
+
+@{
+    ViewData["Title"] = "Checkout - StaySuite";
+}
+
+<div class="container py-5">
+
+    <h1 class="mb-2">Complete Your Reservation</h1>
+    <p class="text-muted mb-4">
+        Review your stay details and enter your contact information.
+    </p>
+
+    @if (!ViewData.ModelState.IsValid)
+    {
+        <div class="alert alert-danger">
+            Please correct the errors below and try again.
+            <div asp-validation-summary="All"></div>
+        </div>
+    }
+
+    <div class="row g-4">
+
+        <!-- Booking Summary -->
+        <div class="col-md-5">
+            <div class="card shadow-sm border-0">
+                <div class="card-body p-4">
+
+                    <h2 class="h4 mb-4">Your Stay Summary</h2>
+
+                    <p class="text-muted mb-1">Room category</p>
+                    <h3 class="h5">@Model.RoomTypeName</h3>
+
+                    <hr />
+
+                    <p class="text-muted mb-1">Check-in</p>
+                    <p class="fw-semibold">
+                        @Model.CheckInDate.ToString("dd MMM yyyy")
+                    </p>
+
+                    <p class="text-muted mb-1">Check-out</p>
+                    <p class="fw-semibold">
+                        @Model.CheckOutDate.ToString("dd MMM yyyy")
+                    </p>
+
+                    <p class="text-muted mb-1">Number of nights</p>
+                    <p class="fw-semibold">
+                        @((Model.CheckOutDate.Date - Model.CheckInDate.Date).Days)
+                    </p>
+
+                    <p class="text-muted mb-1">Guests</p>
+                    <p class="fw-semibold">@Model.Guests</p>
+
+                    <hr />
+
+                    <p class="text-muted mb-1">Total estimated price</p>
+                    <h2 class="text-primary fw-bold">
+                        @Model.TotalPrice.ToString(
+                            "C",
+                            System.Globalization.CultureInfo.GetCultureInfo("en-IN"))
+                    </h2>
+
+                    <p class="small text-muted">
+                        Payment will be handled at the front desk upon arrival.
+                    </p>
+
+                </div>
+            </div>
+        </div>
+
+        <!-- Guest Details Form -->
+        <div class="col-md-7">
+            <div class="card shadow-sm border-0">
+                <div class="card-body p-4">
+
+                    <h2 class="h4 mb-4">Guest Details</h2>
+
+                    <form asp-controller="Booking"
+                          asp-action="Checkout"
+                          method="post">
+
+                        @Html.AntiForgeryToken()
+
+                        <input type="hidden" asp-for="RoomTypeId" />
+                        <input type="hidden" asp-for="CheckInDate" />
+                        <input type="hidden" asp-for="CheckOutDate" />
+                        <input type="hidden" asp-for="Guests" />
+
+                        <div class="mb-3">
+                            <label asp-for="FullName" class="form-label"></label>
+                            <input asp-for="FullName"
+                                   class="form-control"
+                                   placeholder="Enter your full name"
+                                   autocomplete="name" />
+                            <span asp-validation-for="FullName"
+                                  class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="Email" class="form-label"></label>
+                            <input asp-for="Email"
+                                   class="form-control"
+                                   placeholder="you@example.com"
+                                   autocomplete="email" />
+                            <span asp-validation-for="Email"
+                                  class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-4">
+                            <label asp-for="Phone" class="form-label"></label>
+                            <input asp-for="Phone"
+                                   class="form-control"
+                                   placeholder="Enter your phone number"
+                                   autocomplete="tel" />
+                            <span asp-validation-for="Phone"
+                                  class="text-danger"></span>
+                        </div>
+
+                        <button type="submit"
+                                class="btn btn-primary btn-lg w-100">
+                            Confirm Reservation
+                        </button>
+
+                        <a asp-controller="Home"
+                           asp-action="Index"
+                           class="btn btn-outline-secondary w-100 mt-2">
+                            Back to Room Search
+                        </a>
+
+                    </form>
+
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

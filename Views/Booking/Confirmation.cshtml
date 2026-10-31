@@ -1,0 +1,72 @@
+﻿@model WebsiteApp.Models.ViewModels.BookingConfirmationViewModel
+
+@{
+    ViewData["Title"] = "Booking Confirmation";
+}
+
+<div class="container mt-5">
+
+    <div class="card shadow mx-auto"
+         style="max-width:650px;">
+
+        <div class="card-body text-center p-5">
+
+            <h1 class="text-success">
+                Reservation Confirmed!
+            </h1>
+
+            <p class="lead">
+                Your room is secured!
+            </p>
+
+            <hr />
+
+            <h5>Confirmation Number</h5>
+
+            <h3 class="text-primary">
+                @Model.Booking.ConfirmationId
+            </h3>
+
+            <hr />
+
+            <p>
+                <strong>Guest:</strong>
+                @Model.Booking.Guest?.FullName
+            </p>
+
+            <p>
+                <strong>Room Category:</strong>
+                @Model.Booking.RoomType?.CategoryName
+            </p>
+
+            <p>
+                <strong>Check-in:</strong>
+                @Model.Booking.CheckInDate.ToString("dd MMM yyyy")
+            </p>
+
+            <p>
+                <strong>Check-out:</strong>
+                @Model.Booking.CheckOutDate.ToString("dd MMM yyyy")
+            </p>
+
+            <p>
+                <strong>Total Amount:</strong>
+                ₹@Model.Booking.TotalPrice.ToString("N2")
+            </p>
+
+            <div class="alert alert-info mt-4">
+                Payment will be handled at the front desk
+                upon arrival.
+            </div>
+
+            <a asp-controller="Home"
+               asp-action="Index"
+               class="btn btn-primary">
+                Back to Home
+            </a>
+
+        </div>
+
+    </div>
+
+</div>

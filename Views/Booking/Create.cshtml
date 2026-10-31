@@ -1,0 +1,132 @@
+﻿@model WebsiteApp.Models.RoomType
+
+@{
+    ViewData["Title"] = "Booking Details";
+}
+
+<div class="container mt-5 mb-5">
+
+    <div class="row justify-content-center">
+
+        <div class="col-md-8">
+
+            <div class="card shadow">
+
+                <div class="card-header bg-primary text-white">
+                    <h3>Complete Your Reservation</h3>
+                </div>
+
+                <div class="card-body">
+
+                    <div asp-validation-summary="All"
+                         class="text-danger mb-3">
+                    </div>
+
+                    <h4>@Model.CategoryName</h4>
+
+                    <p>@Model.Description</p>
+
+                    <hr />
+
+                    <p>
+                        <strong>Check-in:</strong>
+                        @(((DateTime)ViewBag.CheckIn).ToString("dd MMM yyyy"))
+                    </p>
+
+                    <p>
+                        <strong>Check-out:</strong>
+                        @(((DateTime)ViewBag.CheckOut).ToString("dd MMM yyyy"))
+                    </p>
+
+                    <p>
+                        <strong>Guests:</strong>
+                        @ViewBag.Guests
+                    </p>
+
+                    <p>
+                        <strong>Maximum Capacity:</strong>
+                        @Model.MaxCapacity
+                    </p>
+
+                    <hr />
+
+                    <form asp-controller="Booking"
+                          asp-action="Create"
+                          method="post">
+
+                        @Html.AntiForgeryToken()
+
+                        <input type="hidden"
+                               name="roomTypeId"
+                               value="@Model.RoomTypeId" />
+
+                        <input type="hidden"
+                               name="checkIn"
+                               value="@(((DateTime)ViewBag.CheckIn).ToString("yyyy-MM-dd"))" />
+
+                        <input type="hidden"
+                               name="checkOut"
+                               value="@(((DateTime)ViewBag.CheckOut).ToString("yyyy-MM-dd"))" />
+
+                        <input type="hidden"
+                               name="guests"
+                               value="@ViewBag.Guests" />
+
+                        <div class="mb-3">
+                            <label class="form-label">First Name</label>
+
+                            <input type="text"
+                                   name="firstName"
+                                   class="form-control"
+                                   required
+                                   maxlength="100" />
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Last Name</label>
+
+                            <input type="text"
+                                   name="lastName"
+                                   class="form-control"
+                                   required
+                                   maxlength="100" />
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Email Address</label>
+
+                            <input type="email"
+                                   name="email"
+                                   class="form-control"
+                                   required
+                                   maxlength="150" />
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Phone Number</label>
+
+                            <input type="tel"
+                                   name="phone"
+                                   class="form-control"
+                                   required
+                                   maxlength="20" />
+                        </div>
+
+                        <button type="submit"
+                                class="btn btn-success btn-lg w-100">
+
+                            Confirm Reservation
+
+                        </button>
+
+                    </form>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
